@@ -15,8 +15,8 @@ class MakeLivewireTableCommand extends FileManipulationCommand
     public function handle()
     {
         $this->parser = new ComponentParser(
-            config('livewire.class_namespace', 'App\\Http\\Livewire\\Tables'),
-            config('livewire.view_path', resource_path('views/livewire/tables')),
+            config('livewire-tables.class_namespace', 'App\\Http\\Livewire\\Tables'),
+            config('livewire-tables.view_path', resource_path('views/livewire/tables')),
             $this->argument('name')
         );
 
