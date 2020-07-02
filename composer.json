@@ -1,5 +1,5 @@
 {
-    "name": "coryrose/livewire-tables",
+    "name": "danielbinsmaier/livewire-tables",
     "description": "An extension for Livewire that allows you to effortlessly scaffold datatables with optional pagination, search, and sort.",
     "license": "MIT",
     "authors": [
