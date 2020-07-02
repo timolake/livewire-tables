@@ -15,8 +15,8 @@ class ScaffoldLivewireTableCommand extends FileManipulationCommand
 
     public function handle()
     {
-        $this->parser = new ComponentParser(config('livewire.class_namespace', 'App\\Http\\Livewire\\Tables'),
-            config('livewire.view_path', resource_path('views/livewire/tables')), $this->argument('name'));
+        $this->parser = new ComponentParser(config('livewire-tables.class_namespace', 'App\\Http\\Livewire\\Tables'),
+            config('livewire-tables.view_path', resource_path('views/livewire/tables')), $this->argument('name'));
         $view = $this->createView();
         $view && $this->line('<options=bold,reverse;fg=green> Table Scaffolded </> ');
         $view && $this->line("<options=bold;fg=green>VIEW:</>  {$this->parser->relativeViewPath()}");
