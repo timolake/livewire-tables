@@ -48,7 +48,7 @@ class LivewireModelTable extends Component
         $query = $model->newQuery();
         $queryFields = $this->generateQueryFields($model);
         if ($this->with()) {
-            $query = $this->joinRelated($query, $model);
+            $query = $query->with($this->with());
             if ($this->sortIsRelatedField()) {
                 $query = $this->sortByRelatedField($query, $model);
             } else {
@@ -125,18 +125,6 @@ class LivewireModelTable extends Component
     protected function sortIsRelatedField(): bool
     {
         return $this->sortField && Str::contains($this->sortField, '.') && $this->sortDir;
-    }
-
-    protected function joinRelated($query, $model)
-    {
-        $query = $query->with($this->with());
-        foreach ($this->with() as $relationship) {
-            $query = $query->leftJoin($model->{$relationship}()->getRelated()->getTable(),
-                $model->getTable().'.'.$model->getKeyName(), '=',
-                $model->{$relationship}()->getRelated()->getTable().'.'.$model->{$relationship}()->getForeignKeyName());
-        }
-
-        return $query;
     }
 
     protected function setSelectFields($query, $queryFields)
