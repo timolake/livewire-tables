@@ -57,7 +57,6 @@ class LivewireModelTable extends Component
         } else {
             $query = $this->sort($query);
         }
-        $query = $this->setSelectFields($query, $queryFields);
         if ($this->hasSearch && $this->search && $this->search !== '') {
             $query = $this->search($query, $queryFields);
         }
