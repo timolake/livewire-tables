@@ -10,8 +10,28 @@ Based upon danielbinsmaier/livewire-tables and coryrose/livewire-tables
 
 
 ## Installation
+### Via github 
+https://likegeeks.com/install-and-use-non-composer-laravel-packages/
 
-Via Composer
+add package mannualy to composer.json
+
+```
+    "require": {
+        "timolake/livewire-tables": "master"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/timolake/livewire-tables"
+        }
+    ],
+```
+
+```
+composer update
+```
+
+### Via Composer (not yet available)
 
 ``` bash
 $ composer require timolake/livewire-tables
