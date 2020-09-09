@@ -9,6 +9,8 @@ use App\User;
 class [class] extends LivewireModelTable
 {
     use WithPagination;
+    protected $paginationTheme = 'bootstrap';
+
 
     public $paginate = true;
     public $pagination = 10;
