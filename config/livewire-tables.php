@@ -33,13 +33,13 @@ return [
     |
     */
     'css' => [
-        'wrapper' => null,
-        'table' => null,
-        'thead' => null,
-        'th' => null,
-        'tbody' => null,
-        'tr' => null,
-        'td' => null,
+        'wrapper' => "null",
+        'table' => "table",
+        'thead' => "table__head",
+        'th' => "table__cell table__cell--head",
+        'tbody' => "table__body",
+        'tr' => "table__row",
+        'td' => "table__cell",
         'search_wrapper' => null,
         'search_input' => null,
         'sorted_asc' => null,
