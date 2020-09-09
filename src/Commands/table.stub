@@ -1,14 +1,36 @@
 <div[wrapper]>
+
+
     @if ($hasSearch)
-    <div[search_wrapper]>
-        <div style="position: relative; display: inline-block;">
-        <input[search_input] type="text" wire:model="search" />
-            @if ($search)
-        <button wire:click="clearSearch" style="position: absolute; right: 5px;">&#10005;</button>
-                @endif
+        <div>
+            <div class="d-md-flex justify-content-between align-items-baseline mb-3">
+
+                <div>
+                    <h1>@lang("Users")</h1>
+                </div>
+                <div>
+                    <div class="input-group">
+
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        </div>
+
+                        <input[search_input] type="text" class="form-control"  wire:model="search">
+
+                        @if ($search)
+                            <div class="input-group-append">
+                                <button wire:click="clearSearch" class="input-group-text"><i class="far fa-trash-alt"></i></button>
+                            </div>
+                        @endif
+
+                    </div>
+                </div>
+
+            </div>
         </div>
-    </div>
     @endif
+
+
     <table[table]>
         <thead[thead]>
         <tr[tr]>
@@ -25,7 +47,19 @@
     </table>
     @if ($paginate)
     <div[pagination_wrapper]>
-        {{ $rowData->links() }}
+        <div>
+            {{ $rowData->links() }}
+        </div>
+        <div>
+            <p class="">
+                {!! __('Row') !!}
+                <span>{{ $rowData->firstItem() }}</span>
+                -
+                <span>{{ $rowData->lastItem() }}</span>
+                {!! __('of') !!}
+                <span>{{ $rowData->total() }}</span>
+            </p>
+        </div>
     </div>
     @endif
 </div>
