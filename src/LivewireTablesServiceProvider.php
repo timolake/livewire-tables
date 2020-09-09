@@ -1,9 +1,9 @@
 <?php
 
-namespace Coryrose\LivewireTables;
+namespace timolake\LivewireTables;
 
-use Coryrose\LivewireTables\Commands\MakeLivewireTableCommand;
-use Coryrose\LivewireTables\Commands\ScaffoldLivewireTableCommand;
+use timolake\LivewireTables\Commands\MakeLivewireTableCommand;
+use timolake\LivewireTables\Commands\ScaffoldLivewireTableCommand;
 use Illuminate\Support\ServiceProvider;
 
 class LivewireTablesServiceProvider extends ServiceProvider
@@ -15,8 +15,8 @@ class LivewireTablesServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'coryrose');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'coryrose');
+        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'timolake');
+        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'timolake');
         // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
 
@@ -65,17 +65,17 @@ class LivewireTablesServiceProvider extends ServiceProvider
 
         // Publishing the views.
         /*$this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/coryrose'),
+            __DIR__.'/../resources/views' => base_path('resources/views/vendor/timolake'),
         ], 'livewire-tables.views');*/
 
         // Publishing assets.
         /*$this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/coryrose'),
+            __DIR__.'/../resources/assets' => public_path('vendor/timolake'),
         ], 'livewire-tables.views');*/
 
         // Publishing the translation files.
         /*$this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/coryrose'),
+            __DIR__.'/../resources/lang' => resource_path('lang/vendor/timolake'),
         ], 'livewire-tables.views');*/
 
         // Registering package commands.

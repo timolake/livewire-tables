@@ -1,6 +1,6 @@
 <?php
 
-namespace Coryrose\LivewireTables;
+namespace timolake\LivewireTables;
 
 use Illuminate\Support\Str;
 use Livewire\Component;

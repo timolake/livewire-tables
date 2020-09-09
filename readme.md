@@ -6,15 +6,15 @@
 [![StyleCI][ico-styleci]][link-styleci]
 
 An extension for [Livewire](https://laravel-livewire.com/docs/quickstart/) that allows you to effortlessly scaffold datatables with optional pagination, search, and sort.
+Based upon danielbinsmaier/livewire-tables and coryrose/livewire-tables
 
-Live demo website will be available soon.
 
 ## Installation
 
 Via Composer
 
 ``` bash
-$ composer require coryrose/livewire-tables
+$ composer require timolake/livewire-tables
 ```
 
 The package will automatically register its service provider.
@@ -22,7 +22,7 @@ The package will automatically register its service provider.
 To publish the configuration file to `config/livewire-tables.php` run:
 
 ```
-php artisan vendor:publish --provider="Coryrose\LivewireTables\LivewireTablesServiceProvider"
+php artisan vendor:publish --provider="timolake\LivewireTables\LivewireTablesServiceProvider"
 ```
 
 ## Usage
@@ -237,14 +237,14 @@ Please see [contributing.md](contributing.md) for details and a todolist.
 
 MIT. Please see the [license file](license.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/coryrose/livewire-tables.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/coryrose/livewire-tables.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/coryrose/livewire-tables/master.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/timolake/livewire-tables.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/timolake/livewire-tables.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/timolake/livewire-tables/master.svg?style=flat-square
 [ico-styleci]: https://styleci.io/repos/12345678/shield
 
-[link-packagist]: https://packagist.org/packages/coryrose/livewire-tables
-[link-downloads]: https://packagist.org/packages/coryrose/livewire-tables
-[link-travis]: https://travis-ci.org/coryrose/livewire-tables
+[link-packagist]: https://packagist.org/packages/timolake/livewire-tables
+[link-downloads]: https://packagist.org/packages/timolake/livewire-tables
+[link-travis]: https://travis-ci.org/timolake/livewire-tables
 [link-styleci]: https://styleci.io/repos/12345678
-[link-author]: https://github.com/coryrose
+[link-author]: https://github.com/timolake
 [link-contributors]: ../../contributors

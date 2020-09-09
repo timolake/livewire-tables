@@ -1,6 +1,6 @@
 <?php
 
-namespace Coryrose\LivewireTables\Commands;
+namespace timolake\LivewireTables\Commands;
 
 use Illuminate\Support\Facades\File;
 use Livewire\Commands\ComponentParser;

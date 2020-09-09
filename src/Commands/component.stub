@@ -2,7 +2,7 @@
 
 namespace [namespace];
 
-use Coryrose\LivewireTables\LivewireModelTable;
+use timolake\LivewireTables\LivewireModelTable;
 use Livewire\WithPagination;
 use App\User;
 
