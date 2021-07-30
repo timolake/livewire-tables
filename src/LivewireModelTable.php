@@ -2,6 +2,7 @@
 
 namespace timolake\LivewireTables;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -20,8 +21,7 @@ class LivewireModelTable extends Component
 
     public function setSort($column)
     {
-        $this->sortField = array_key_exists('sort_field',
-            $this->fields[$column]) ? $this->fields[$column]['sort_field'] : $this->fields[$column]['name'];
+        $this->sortField = array_key_exists('sort_field', $this->fields[$column]) ? $this->fields[$column]['sort_field'] : $this->fields[$column]['name'];
         if (! $this->sortDir) {
             $this->sortDir = 'asc';
         } elseif ($this->sortDir == 'asc') {
@@ -47,6 +47,7 @@ class LivewireModelTable extends Component
         $model = app($this->model());
         $query = $model->newQuery();
         $queryFields = $this->generateQueryFields($model);
+
         if ($this->with()) {
             $query = $query->with($this->with());
             if ($this->sortIsRelatedField()) {
@@ -57,10 +58,11 @@ class LivewireModelTable extends Component
         } else {
             $query = $this->sort($query);
         }
+
         if ($this->hasSearch && $this->search && $this->search !== '') {
             $query = $this->search($query, $queryFields);
         }
-
+        //		dd($query->toSql());
         return $query;
     }
 
@@ -75,16 +77,34 @@ class LivewireModelTable extends Component
 
     protected function search($query, $queryFields)
     {
-        $searchFields = $queryFields->where('searchable', true)->pluck('name');
-        $firstSearch = $searchFields->shift();
-        $query = $query->where($firstSearch, 'LIKE', "%{$this->search}%");
-        if ($searchFields->count() > 0) {
-            foreach ($searchFields->toArray() as $searchField) {
-                $query = $query->orWhere($searchField, 'LIKE', "%{$this->search}%");
-            }
-        }
+        $searchFields = $queryFields->where('searchable', true)->pluck('name')->toArray();
+
+        foreach ( explode(" ", $this->search) as $key => $searchString)
+            foreach ($searchFields as $searchfield)
+                $this->whereLike($query, $searchFields, $searchString);
 
         return $query;
+    }
+
+    protected function whereLike(Builder &$query, array $attributes, string $searchTerm){
+
+        $query->where(function (Builder $query) use ($attributes, $searchTerm) {
+            foreach (array_wrap($attributes) as $attribute) {
+                $query->when(
+                    str_contains($attribute, '.'),
+                    function (Builder $query) use ($attribute, $searchTerm) {
+                        [$relationName, $relationAttribute] = explode('.', $attribute);
+
+                        $query->orWhereHas($relationName, function (Builder $query) use ($relationAttribute, $searchTerm) {
+                            $query->where($relationAttribute, 'LIKE', "%{$searchTerm}%");
+                        });
+                    },
+                    function (Builder $query) use ($attribute, $searchTerm) {
+                        $query->orWhere($attribute, 'LIKE', "%{$searchTerm}%");
+                    }
+                );
+            }
+        });
     }
 
     protected function paginate($query)
@@ -139,7 +159,8 @@ class LivewireModelTable extends Component
                 $selectField['name'] = $model->getTable().'.id';
             } elseif (Str::contains($selectField['name'], '.')) {
                 $fieldParts = explode('.', $selectField['name']);
-                $selectField['name'] = $model->{$fieldParts[0]}()->getRelated()->getTable().'.'.$fieldParts[1];
+                //                $selectField['name'] = $model->{$fieldParts[0]}()->getRelated()->getTable().'.'.$fieldParts[1];
+                $selectField['name'] = $fieldParts[0].'.'.$fieldParts[1];
             }
 
             return $selectField;
