@@ -155,11 +155,9 @@ class LivewireModelTable extends Component
     protected function generateQueryFields($model)
     {
         return (collect($this->fields))->transform(function ($selectField) use ($model) {
-            if ($selectField['name'] == 'id') {
-                $selectField['name'] = $model->getTable().'.id';
-            } elseif (Str::contains($selectField['name'], '.')) {
+
+            if (Str::contains($selectField['name'], '.')) {
                 $fieldParts = explode('.', $selectField['name']);
-                //                $selectField['name'] = $model->{$fieldParts[0]}()->getRelated()->getTable().'.'.$fieldParts[1];
                 $selectField['name'] = $fieldParts[0].'.'.$fieldParts[1];
             }
 
