@@ -30,6 +30,13 @@
         </div>
     @endif
 
+    @if($hasTrashed)
+        <div class="input-group">
+            <input type="checkbox" class="py-2  pl-10 rounded-b-lg"  wire:model="trashed">
+        </div>
+    @endif
+
+
 
     <table[table]>
         <thead[thead]>

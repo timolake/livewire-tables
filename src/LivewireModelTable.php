@@ -16,6 +16,8 @@ class LivewireModelTable extends Component
     public $hasSearch = true;
     public $fields = [];
     public $css;
+    public $hasTrashed = false;
+    public $trashed = false;
 
     protected $listeners = ['sortColumn' => 'setSort'];
 
@@ -61,6 +63,10 @@ class LivewireModelTable extends Component
 
         if ($this->hasSearch && $this->search && $this->search !== '') {
             $query = $this->search($query, $queryFields);
+        }
+
+        if($this->trashed){
+            $query->onlyTrashed();
         }
         //		dd($query->toSql());
         return $query;
