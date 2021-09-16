@@ -86,23 +86,26 @@ class LivewireModelTable extends Component
         $searchFields = $queryFields->where('searchable', true)->pluck('name')->toArray();
 
         foreach ( explode(" ", $this->search) as $key => $searchString)
-            foreach ($searchFields as $searchfield)
-                $this->whereLike($query, $searchFields, $searchString);
+            $this->whereLike($query, $searchFields, $searchString);
 
         return $query;
     }
 
-    protected function whereLike(Builder &$query, array $attributes, string $searchTerm){
+    protected function whereLike(Builder &$query, $attributes, string $searchTerm){
 
         $query->where(function (Builder $query) use ($attributes, $searchTerm) {
             foreach (array_wrap($attributes) as $attribute) {
                 $query->when(
                     str_contains($attribute, '.'),
                     function (Builder $query) use ($attribute, $searchTerm) {
-                        [$relationName, $relationAttribute] = explode('.', $attribute);
 
-                        $query->orWhereHas($relationName, function (Builder $query) use ($relationAttribute, $searchTerm) {
-                            $query->where($relationAttribute, 'LIKE', "%{$searchTerm}%");
+                        [$table, $field] = explode('.', $attribute);
+                        [$field, $fk]= explode(":",$field);
+
+                        $query->orWherein("id" , function ( $query) use ($table,$field, $fk, $searchTerm) {
+                            $query->select($fk)
+                                ->from($table)
+                                ->where($field, 'LIKE', "%{$searchTerm}%");
                         });
                     },
                     function (Builder $query) use ($attribute, $searchTerm) {
