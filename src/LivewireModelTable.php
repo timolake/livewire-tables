@@ -3,6 +3,8 @@
 namespace timolake\LivewireTables;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -98,13 +100,33 @@ class LivewireModelTable extends Component
                 $query->when(
                     str_contains($attribute, '.'),
                     function (Builder $query) use ($attribute, $searchTerm) {
+                        $parentId = null;
+                        $subTable = null;
+                        $subId = null;
 
-                        [$table, $field] = explode('.', $attribute);
-                        [$field, $fk]= explode(":",$field);
 
-                        $query->orWherein("id" , function ( $query) use ($table,$field, $fk, $searchTerm) {
-                            $query->select($fk)
-                                ->from($table)
+                        [$relationshipName, $field] = explode('.', $attribute);
+                        //todo: works for belongsTo, what with other types??
+                        $relationship = app($this->model())->$relationshipName();
+
+                        if($relationship instanceof BelongsTo){
+                            $fullForeignKey = $relationship->getQualifiedForeignKeyName();
+                            [$parentTable, $parentId]= explode(".",$fullForeignKey);
+
+                            $fullOwnerKey= $relationship->getQualifiedOwnerKeyName();
+                            [$subTable, $subId]= explode(".",$fullOwnerKey);
+                        }
+
+                        if($relationship instanceof HasMany){
+                            $fullForeignKey = $relationship->getQualifiedForeignKeyName();
+                            [$subTable, $subId]= explode(".",$fullForeignKey);
+
+                            $parentId = $relationship->getLocalKeyName();
+                        }
+
+                        $query->orWherein($parentId , function ( $query) use ($field, $subTable, $subId, $searchTerm) {
+                            $query->select($subId)
+                                ->from($subTable)
                                 ->where($field, 'LIKE', "%{$searchTerm}%");
                         });
                     },
