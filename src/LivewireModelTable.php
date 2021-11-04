@@ -70,8 +70,15 @@ class LivewireModelTable extends Component
         if($this->trashed){
             $query->onlyTrashed();
         }
-        //		dd($query->toSql());
+
+        $this->updateQuery($query);
+
         return $query;
+    }
+
+    protected function updateQuery(Builder &$query)
+    {
+
     }
 
     protected function sort($query)
