@@ -1,16 +1,24 @@
 # Livewire-Tables
 
-[![Latest Version on Packagist][ico-version]][link-packagist]
-[![Total Downloads][ico-downloads]][link-downloads]
-[![Build Status][ico-travis]][link-travis]
-[![StyleCI][ico-styleci]][link-styleci]
-
-An extension for [Livewire](https://laravel-livewire.com/docs/quickstart/) that allows you to effortlessly scaffold datatables with optional pagination, search, and sort.
-Based upon danielbinsmaier/livewire-tables and coryrose/livewire-tables
-
+An extension for [Livewire](https://laravel-livewire.com/docs/quickstart/) that allows you to effortlessly scaffold datatables with optional pagination, search, and sort. <br>Based upon danielbinsmaier/livewire-tables and coryrose/livewire-tables
 
 ## Installation
-### Via github 
+
+### Via Composer
+
+``` bash
+$ composer require timolake/livewire-tables
+```
+
+The package will automatically register its service provider.
+
+To publish the configuration file to `config/livewire-tables.php` run:
+
+```
+php artisan vendor:publish --provider="timolake\LivewireTables\LivewireTablesServiceProvider"
+```
+
+### Manualy via github 
 https://likegeeks.com/install-and-use-non-composer-laravel-packages/
 
 add package mannualy to composer.json
@@ -31,19 +39,7 @@ add package mannualy to composer.json
 composer update
 ```
 
-### Via Composer (not yet available)
 
-``` bash
-$ composer require timolake/livewire-tables
-```
-
-The package will automatically register its service provider.
-
-To publish the configuration file to `config/livewire-tables.php` run:
-
-```
-php artisan vendor:publish --provider="timolake\LivewireTables\LivewireTablesServiceProvider"
-```
 
 ## Usage
 
@@ -236,16 +232,9 @@ You can use the scaffold command continuously as you make changes to the parent 
 
 Since the rendered template is simple HTML, there’s no need for table “slots” for customization - customize the template as you see fit!
 
-## Todo
-- Further support for more advanced queries than a model
 
 ## Change log
-
 Please see the [changelog](changelog.md) for more information on what has changed recently.
-
-## Contributing
-
-Please see [contributing.md](contributing.md) for details and a todolist.
 
 ## Credits
 
@@ -256,15 +245,3 @@ Please see [contributing.md](contributing.md) for details and a todolist.
 ## License
 
 MIT. Please see the [license file](license.md) for more information.
-
-[ico-version]: https://img.shields.io/packagist/v/timolake/livewire-tables.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/timolake/livewire-tables.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/timolake/livewire-tables/master.svg?style=flat-square
-[ico-styleci]: https://styleci.io/repos/12345678/shield
-
-[link-packagist]: https://packagist.org/packages/timolake/livewire-tables
-[link-downloads]: https://packagist.org/packages/timolake/livewire-tables
-[link-travis]: https://travis-ci.org/timolake/livewire-tables
-[link-styleci]: https://styleci.io/repos/12345678
-[link-author]: https://github.com/timolake
-[link-contributors]: ../../contributors
