@@ -15,6 +15,7 @@ class LivewireModelTable extends Component
     public $search = null;
     public $paginate = true;
     public $pagination = 10;
+    public $paginationItems = [];
     public $hasSearch = true;
     public $fields = [];
     public $css;
@@ -22,6 +23,12 @@ class LivewireModelTable extends Component
     public $trashed = false;
 
     protected $listeners = ['sortColumn' => 'setSort'];
+
+    public function mount()
+    {
+        $this->buildPaginationItems();
+    }
+
 
     public function setSort($column)
     {
@@ -152,6 +159,20 @@ class LivewireModelTable extends Component
         }
 
         return $query->paginate($this->pagination ?? 15);
+    }
+
+    public function buildPaginationItems()
+    {
+        $options = config('livewire-tables.pagination_items', [10,25,50,100]);
+        $maxCount = $this->buildQuery()->count();
+        foreach ($options as $option) {
+            if ($option < $maxCount) {
+                $this->paginationItems[$option] = $option;
+            } else {
+                $this->paginationItems[$maxCount] = __("all");
+                break;
+            }
+        }
     }
 
     protected function sortByRelatedField($query, $model)
