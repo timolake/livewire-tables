@@ -3,8 +3,10 @@
 namespace timolake\LivewireTables;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\Relationship;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -29,18 +31,24 @@ class LivewireModelTable extends Component
         $this->buildPaginationItems();
     }
 
-
     public function setSort($column)
     {
-        $this->sortField = array_key_exists('sort_field', $this->fields[$column]) ? $this->fields[$column]['sort_field'] : $this->fields[$column]['name'];
-        if (! $this->sortDir) {
-            $this->sortDir = 'asc';
-        } elseif ($this->sortDir == 'asc') {
-            $this->sortDir = 'desc';
-        } else {
-            $this->sortDir = null;
-            $this->sortField = null;
+        $field =  $this->fields[$column];
+
+        if(isset($field["sortable"]) and $field["sortable"]){
+
+            $sortField = array_key_exists('sort_field',$field)
+                ?$field['sort_field']
+                :$field['name'];
+
+            if($sortField != $this->sortField){
+                $this->sortField = $sortField;
+                $this->sortDir = 'asc';
+            }else{
+                $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
+            }
         }
+
     }
 
     protected function query()
@@ -59,13 +67,8 @@ class LivewireModelTable extends Component
         $query = $model->newQuery();
         $queryFields = $this->generateQueryFields($model);
 
-        if ($this->with()) {
-            $query = $query->with($this->with());
-            if ($this->sortIsRelatedField()) {
-                $query = $this->sortByRelatedField($query, $model);
-            } else {
-                $query = $this->sort($query);
-            }
+        if ($this->sortIsRelatedField()) {
+            $query = $this->sortByRelatedField($query, $model);
         } else {
             $query = $this->sort($query);
         }
@@ -74,7 +77,7 @@ class LivewireModelTable extends Component
             $query = $this->search($query, $queryFields);
         }
 
-        if($this->trashed){
+        if ($this->trashed) {
             $query->onlyTrashed();
         }
 
@@ -85,60 +88,53 @@ class LivewireModelTable extends Component
 
     protected function updateQuery(Builder &$query)
     {
-
     }
 
     protected function sort($query)
     {
-        if (! $this->sortField || ! $this->sortDir) {
+        if (!$this->sortField || !$this->sortDir) {
             return $query;
         }
 
         return $query->orderBy($this->sortField, $this->sortDir);
     }
 
+    protected function sortByRelatedField($query, $model)
+    {
+        [$relationshipName, $field] = explode('.', $this->sortField);
+        $relationship = $this->getRelationship($relationshipName);
+        [$parentTable, $parentId, $subTable, $subId] = $this->getRelationshipKeys($relationship);
+
+        return $query->orderBy(
+            $relationship->getModel()::select("$field")
+                ->whereColumn("$subTable.$subId", "$parentTable.$parentId")
+                ->orderBy($field),
+            $this->sortDir
+        );
+    }
+
     protected function search($query, $queryFields)
     {
         $searchFields = $queryFields->where('searchable', true)->pluck('name')->toArray();
 
-        foreach ( explode(" ", $this->search) as $key => $searchString)
+        foreach (explode(" ", $this->search) as $key => $searchString) {
             $this->whereLike($query, $searchFields, $searchString);
+        }
 
         return $query;
     }
 
-    protected function whereLike(Builder &$query, $attributes, string $searchTerm){
-
+    protected function whereLike(Builder &$query, $attributes, string $searchTerm)
+    {
         $query->where(function (Builder $query) use ($attributes, $searchTerm) {
             foreach (array_wrap($attributes) as $attribute) {
                 $query->when(
                     str_contains($attribute, '.'),
                     function (Builder $query) use ($attribute, $searchTerm) {
-                        $parentId = null;
-                        $subTable = null;
-                        $subId = null;
-
-
                         [$relationshipName, $field] = explode('.', $attribute);
-                        //todo: works for belongsTo, what with other types??
-                        $relationship = app($this->model())->$relationshipName();
+                        [$parentTable, $parentId, $subTable, $subId] = $this->getRelationshipKeys($this->getRelationship($relationshipName));
 
-                        if($relationship instanceof BelongsTo){
-                            $fullForeignKey = $relationship->getQualifiedForeignKeyName();
-                            [$parentTable, $parentId]= explode(".",$fullForeignKey);
-
-                            $fullOwnerKey= $relationship->getQualifiedOwnerKeyName();
-                            [$subTable, $subId]= explode(".",$fullOwnerKey);
-                        }
-
-                        if($relationship instanceof HasMany){
-                            $fullForeignKey = $relationship->getQualifiedForeignKeyName();
-                            [$subTable, $subId]= explode(".",$fullForeignKey);
-
-                            $parentId = $relationship->getLocalKeyName();
-                        }
-
-                        $query->orWherein($parentId , function ( $query) use ($field, $subTable, $subId, $searchTerm) {
+                        $query->orWherein($parentId, function ($query) use ($field, $subTable, $subId, $searchTerm) {
                             $query->select($subId)
                                 ->from($subTable)
                                 ->where($field, 'LIKE', "%{$searchTerm}%");
@@ -152,9 +148,40 @@ class LivewireModelTable extends Component
         });
     }
 
+    public function getRelationship(string $name): Relation
+    {
+        return app($this->model())->$name();
+    }
+
+    public function getRelationshipKeys(Relation $relationship): array
+    {
+        $parentTable = null;
+        $parentId = null;
+        $subTable = null;
+        $subId = null;
+
+        $fullForeignKey = $relationship->getQualifiedForeignKeyName();
+
+        if ($relationship instanceof BelongsTo) {
+            [$parentTable, $parentId] = explode(".", $fullForeignKey);
+
+            $fullOwnerKey = $relationship->getQualifiedOwnerKeyName();
+            [$subTable, $subId] = explode(".", $fullOwnerKey);
+        }
+
+        if ($relationship instanceof HasMany) {
+            [$subTable, $subId] = explode(".", $fullForeignKey);
+
+            $parentId = $relationship->getLocalKeyName();
+        }
+
+        return [$parentTable, $parentId, $subTable, $subId];
+    }
+
+
     protected function paginate($query)
     {
-        if (! $this->paginate) {
+        if (!$this->paginate) {
             return $query->get();
         }
 
@@ -163,7 +190,7 @@ class LivewireModelTable extends Component
 
     public function buildPaginationItems()
     {
-        $options = config('livewire-tables.pagination_items', [10,25,50,100]);
+        $options = config('livewire-tables.pagination_items', [10, 25, 50, 100]);
         $maxCount = $this->buildQuery()->count();
         foreach ($options as $option) {
             if ($option < $maxCount) {
@@ -175,14 +202,6 @@ class LivewireModelTable extends Component
         }
     }
 
-    protected function sortByRelatedField($query, $model)
-    {
-        $relations = collect(explode('.', $this->sortField));
-        $relationship = $relations->first();
-        $sortField = $relations->pop();
-
-        return $query->orderBy($model->{$relationship}()->getRelated()->getTable().'.'.$sortField, $this->sortDir);
-    }
 
     public function model()
     {
@@ -214,10 +233,9 @@ class LivewireModelTable extends Component
     protected function generateQueryFields($model)
     {
         return (collect($this->fields))->transform(function ($selectField) use ($model) {
-
             if (Str::contains($selectField['name'], '.')) {
                 $fieldParts = explode('.', $selectField['name']);
-                $selectField['name'] = $fieldParts[0].'.'.$fieldParts[1];
+                $selectField['name'] = $fieldParts[0] . '.' . $fieldParts[1];
             }
 
             return $selectField;
