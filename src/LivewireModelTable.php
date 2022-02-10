@@ -3,10 +3,10 @@
 namespace timolake\LivewireTables;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\Relationship;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -22,33 +22,33 @@ class LivewireModelTable extends Component
     public $fields = [];
     public $css;
     public $hasTrashed = false;
-    public $trashed = false;
+    public $trashed;
 
     protected $listeners = ['sortColumn' => 'setSort'];
 
-    public function mount()
+    public function mount(Request $request)
     {
+        $this->trashed = $request->trashed == 1 ?? false;
+        $this->search = $request->search ?? null;
         $this->buildPaginationItems();
     }
 
     public function setSort($column)
     {
-        $field =  $this->fields[$column];
+        $field = $this->fields[$column];
 
-        if(isset($field["sortable"]) and $field["sortable"]){
+        if (isset($field["sortable"]) and $field["sortable"]) {
+            $sortField = array_key_exists('sort_field', $field)
+                ? $field['sort_field']
+                : $field['name'];
 
-            $sortField = array_key_exists('sort_field',$field)
-                ?$field['sort_field']
-                :$field['name'];
-
-            if($sortField != $this->sortField){
+            if ($sortField != $this->sortField) {
                 $this->sortField = $sortField;
                 $this->sortDir = 'asc';
-            }else{
+            } else {
                 $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
             }
         }
-
     }
 
     protected function query()
@@ -178,7 +178,6 @@ class LivewireModelTable extends Component
         return [$parentTable, $parentId, $subTable, $subId];
     }
 
-
     protected function paginate($query)
     {
         if (!$this->paginate) {
@@ -201,7 +200,6 @@ class LivewireModelTable extends Component
             }
         }
     }
-
 
     public function model()
     {
