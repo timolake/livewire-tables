@@ -1,4 +1,8 @@
 # Changelog
+## 1.6
+- update component stub
+- update table stub for jetstream
+- setting inital value of search & trashed via request
 
 ## 1.5
 - add pagination items
