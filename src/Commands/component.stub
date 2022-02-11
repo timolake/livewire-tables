@@ -9,16 +9,13 @@ use App\User;
 class [class] extends LivewireModelTable
 {
     use WithPagination;
-    protected $paginationTheme = 'bootstrap';
-
 
     public $paginate = true;
-    public $pagination = 10;
     public $hasSearch = true;
 
     public $fields = [
         [
-            'title' => 'ID',
+            'title' => 'id',
             'name' => 'id',
             'header_class' => '',
             'cell_class' => '',
@@ -36,6 +33,6 @@ class [class] extends LivewireModelTable
 
     public function model()
     {
-        return User::class;
+        return Model::class;
     }
 }
