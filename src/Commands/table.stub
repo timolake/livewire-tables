@@ -3,7 +3,7 @@
     <div>
         <div class="flex justify-between items-center mb-3">
 
-            <div class="flex items-center  ">
+            <div class="flex items-center space-x-3">
                 <div class="">
                     <h1 class="m-0 p-0">@lang("Model")</h1>
                 </div>
