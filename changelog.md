@@ -1,4 +1,8 @@
 # Changelog
+## 1.6.2
+- refactor to abstract model
+## 1.6.1
+- support for laravel 9
 ## 1.6
 - update component stub
 - update table stub for jetstream
