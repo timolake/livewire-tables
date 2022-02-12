@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
-class LivewireModelTable extends Component
+abstract class LivewireModelTable extends Component
 {
     public $sortField = null;
     public $sortDir = null;
@@ -201,9 +201,7 @@ class LivewireModelTable extends Component
         }
     }
 
-    public function model()
-    {
-    }
+    abstract function model();
 
     protected function with()
     {

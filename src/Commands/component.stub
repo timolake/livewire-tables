@@ -4,7 +4,6 @@ namespace [namespace];
 
 use timolake\LivewireTables\LivewireModelTable;
 use Livewire\WithPagination;
-use App\User;
 
 class [class] extends LivewireModelTable
 {
@@ -31,8 +30,4 @@ class [class] extends LivewireModelTable
         ]);
     }
 
-    public function model()
-    {
-        return Model::class;
-    }
 }
