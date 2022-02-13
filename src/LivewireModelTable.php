@@ -217,7 +217,10 @@ abstract class LivewireModelTable extends Component
         }
         $this->paginationItems[$maxCount] = "$maxCount";
 
-        if ($this->selectAllRows) {
+        if ($this->selectAllRows
+            or $this->pagination > $maxCount
+            or array_search($this->pagination, $options) === false
+        ) {
             $this->pagination = Arr::last($this->paginationItems);
             $this->selectAllRows = false;
         }
