@@ -29,6 +29,7 @@ abstract class LivewireModelTable extends Component
     public $hasTrashed = false;
     public $trashed;
 
+    public $checkAll = false;
     public $HasCheckboxes = false;
     public $checkedItems = [];
 
