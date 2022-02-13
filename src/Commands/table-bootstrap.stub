@@ -41,12 +41,22 @@
     <table[table]>
         <thead[thead]>
         <tr[tr]>
+            @if($HasCheckboxes)
+                <th>
+                    <div class="flex items-center space-x-1">
+                        <input type="checkbox" class="rounded" name="checkAll" wire:change="toggleCheckAll">
+                    </div>
+                </th>
+            @endif
 [header]
         </tr>
         </thead>
         <tbody[tbody]>
         @foreach ($rowData as $row)
             <tr[tr]>
+                @if($HasCheckboxes)
+                    <td class=""><input type="checkbox" class="rounded" value="{{ $row->id }}" wire:model="checkedItems"></td>
+                @endif
 [data]
             </tr>
         @endforeach

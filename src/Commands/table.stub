@@ -3,13 +3,13 @@
     <div>
         <div class="flex justify-between items-center mb-3">
 
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center">
                 <div class="">
                     <h1 class="m-0 p-0">@lang("Model")</h1>
                 </div>
 
             </div>
-            <div class="flex justify-end">
+            <div class="flex justify-end space-x-3">
                 @if ($paginate)
                     <div>
                         <x-select :items="$paginationItems" wire:model="pagination"></x-select>
@@ -44,13 +44,21 @@
     <table[table]>
         <thead[thead]>
             <tr[tr]>
-                [header]
+                @if ($HasCheckboxes)
+                    <th>
+                        <input type="checkbox" class="rounded" name="checkAll" wire:change="toggleCheckAll">
+                    </th>
+                @endif
+[header]
             </tr>
         </thead>
         <tbody[tbody]>
             @foreach ($rowData as $row)
                 <tr[tr]>
-                    [data]
+                    @if($HasCheckboxes)
+                        <td class=""><input type="checkbox" class="rounded" value="{{ $row->id }}" wire:model="checkedItems"></td>
+                    @endif
+[data]
                 </tr>
             @endforeach
         </tbody>

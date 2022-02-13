@@ -12,17 +12,26 @@ use Livewire\Component;
 
 abstract class LivewireModelTable extends Component
 {
+
+    public $fields = [];
+    public $css;
+
     public $sortField = null;
     public $sortDir = null;
-    public $search = null;
+
     public $paginate = true;
     public $pagination = 10;
     public $paginationItems = [];
+
     public $hasSearch = true;
-    public $fields = [];
-    public $css;
+    public $search = null;
+
     public $hasTrashed = false;
     public $trashed;
+
+    public $HasCheckboxes = false;
+    public $checkedItems = [];
+
 
     protected $listeners = ['sortColumn' => 'setSort'];
 
@@ -236,5 +245,20 @@ abstract class LivewireModelTable extends Component
 
             return $selectField;
         });
+    }
+
+    public function toggleCheckAll()
+    {
+        $allIds = $this->query()->pluck("id")->toArray();
+
+        if (empty($this->checkedItems)) {
+            $this->checkedItems = $allIds;
+        } else {
+            if (count($this->checkedItems) == count($allIds)) {
+                $this->checkedItems = [];
+            } else {
+                $this->checkedItems = $allIds;
+            }
+        }
     }
 }
