@@ -22,6 +22,7 @@ abstract class LivewireModelTable extends Component
 
     public $paginate = true;
     public $pagination = 10;
+    public $totalRows = null;
     public $paginationItems = [];
     public $selectAllRows = false;
 
@@ -97,7 +98,8 @@ abstract class LivewireModelTable extends Component
         $this->updateQuery($query);
 
         if ($this->paginate) {
-            $this->buildPaginationItems($query->count());
+            $this->totalRows = $query->count();
+            $this->buildPaginationItems();
         }
         return $query;
     }
@@ -203,14 +205,24 @@ abstract class LivewireModelTable extends Component
         return $query->paginate($this->pagination ?? 15);
     }
 
-    public function buildPaginationItems(int $maxCount)
+    public function buildPaginationItems()
     {
+
+        $maxCount = $this->totalRows;
         $this->paginationItems = [];
         $options = config('livewire-tables.pagination_items', [10, 25, 50, 100]);
+        $paginationNotInOptions = array_search($this->pagination, $options) === false;
 
         foreach ($options as $option) {
             if ($option < $maxCount) {
                 $this->paginationItems[$option] = $option;
+
+                if ($paginationNotInOptions
+                    and $this->pagination < $option
+                ) {
+                    $this->pagination = $option;
+                    $paginationNotInOptions = false;
+                }
             } else {
                 break;
             }
