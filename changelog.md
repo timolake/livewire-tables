@@ -1,4 +1,7 @@
 # Changelog
+## 1.7.0
+- add checkboxes
+- refactor pagination dropdown
 ## 1.6.2
 - refactor to abstract model
 ## 1.6.1
