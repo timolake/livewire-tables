@@ -195,7 +195,7 @@ abstract class LivewireModelTable extends Component
             if ($option < $maxCount) {
                 $this->paginationItems[$option] = $option;
             } else {
-                $this->paginationItems[$maxCount] = __("all");
+                $this->paginationItems[$maxCount] = __("$maxCount");
                 break;
             }
         }
