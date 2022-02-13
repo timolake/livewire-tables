@@ -200,7 +200,8 @@ abstract class LivewireModelTable extends Component
     {
         $options = config('livewire-tables.pagination_items', [10, 25, 50, 100]);
         $maxCount = $this->buildQuery()->count();
-
+        
+        $this->paginationItems = [];
         foreach ($options as $option) {
             if ($option < $maxCount) {
                 $this->paginationItems[$option] = $option;
@@ -208,8 +209,7 @@ abstract class LivewireModelTable extends Component
                 break;
             }
         }
-        $this->paginationItems[$maxCount] = __("$maxCount");
-
+        $this->paginationItems[$maxCount] = "$maxCount";
     }
 
     abstract function model();
