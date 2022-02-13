@@ -1,21 +1,18 @@
 <div[wrapper]>
 
     <div>
-        <div class="flex justify-between items-center mb-3">
+        <div class="flex items-center mb-3">
+            <h1 class="m-0 p-0">@lang("Model")</h1>
+        </div>
+
+        <div class="flex justify-between space-x-3 pb-3">
 
             <div class="flex items-center">
-                <div class="">
-                    <h1 class="m-0 p-0">@lang("Model")</h1>
-                </div>
-
-            </div>
-            <div class="flex justify-end space-x-3">
                 @if ($paginate)
-                    <div>
-                        <x-select :items="$paginationItems" wire:model="pagination"></x-select>
-                    </div>
+                    <x-select :items="$paginationItems" wire:model="pagination"></x-select>
                 @endif
-
+            </div>
+            <div class="flex items-center">
                 @if ($hasSearch)
                     <div class="flex items-center">
                         <x-jet-input type="text" wire:model="search" autocomplete="off"></x-jet-input>
@@ -46,7 +43,7 @@
             <tr[tr]>
                 @if ($HasCheckboxes)
                     <th>
-                        <input type="checkbox" class="rounded" name="checkAll" wire:change="toggleCheckAll">
+                        <input type="checkbox" class="rounded" wire:model="checkAll" wire:change="toggleCheckAll">
                     </th>
                 @endif
 [header]
