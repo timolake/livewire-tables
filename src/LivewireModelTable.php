@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -22,9 +23,11 @@ abstract class LivewireModelTable extends Component
     public $paginate = true;
     public $pagination = 10;
     public $paginationItems = [];
+    public $selectAllRows = false;
 
     public $hasSearch = true;
     public $search = null;
+    public $previousSearch = null;
 
     public $hasTrashed = false;
     public $trashed;
@@ -40,7 +43,6 @@ abstract class LivewireModelTable extends Component
     {
         $this->trashed = $request->trashed == 1 ?? false;
         $this->search = $request->search ?? null;
-        $this->buildPaginationItems();
     }
 
     public function setSort($column)
@@ -66,11 +68,6 @@ abstract class LivewireModelTable extends Component
         return $this->paginate($this->buildQuery());
     }
 
-    protected function querySql()
-    {
-        return $this->buildQuery()->toSql();
-    }
-
     protected function buildQuery()
     {
         $model = app($this->model());
@@ -85,6 +82,12 @@ abstract class LivewireModelTable extends Component
 
         if ($this->hasSearch && $this->search && $this->search !== '') {
             $query = $this->search($query, $queryFields);
+
+            if ($this->search != $this->previousSearch) {
+                $this->resetCheckboxes();
+            }
+
+            $this->previousSearch = $this->search;
         }
 
         if ($this->trashed) {
@@ -93,6 +96,9 @@ abstract class LivewireModelTable extends Component
 
         $this->updateQuery($query);
 
+        if ($this->paginate) {
+            $this->buildPaginationItems($query->count());
+        }
         return $query;
     }
 
@@ -197,12 +203,11 @@ abstract class LivewireModelTable extends Component
         return $query->paginate($this->pagination ?? 15);
     }
 
-    public function buildPaginationItems()
+    public function buildPaginationItems(int $maxCount)
     {
-        $options = config('livewire-tables.pagination_items', [10, 25, 50, 100]);
-        $maxCount = $this->buildQuery()->count();
-        
         $this->paginationItems = [];
+        $options = config('livewire-tables.pagination_items', [10, 25, 50, 100]);
+
         foreach ($options as $option) {
             if ($option < $maxCount) {
                 $this->paginationItems[$option] = $option;
@@ -211,6 +216,11 @@ abstract class LivewireModelTable extends Component
             }
         }
         $this->paginationItems[$maxCount] = "$maxCount";
+
+        if ($this->selectAllRows) {
+            $this->pagination = Arr::last($this->paginationItems);
+            $this->selectAllRows = false;
+        }
     }
 
     abstract function model();
@@ -225,9 +235,6 @@ abstract class LivewireModelTable extends Component
         $this->search = null;
     }
 
-    /**
-     * @return bool
-     */
     protected function sortIsRelatedField(): bool
     {
         return $this->sortField && Str::contains($this->sortField, '.') && $this->sortDir;
@@ -261,7 +268,20 @@ abstract class LivewireModelTable extends Component
                 $this->checkedItems = [];
             } else {
                 $this->checkedItems = $allIds;
+                $this->checkAll = true;
             }
         }
     }
+
+    public function resetCheckboxes()
+    {
+        $this->checkAll = false;
+        $this->checkedItems = [];
+    }
+
+    public function paginationChanged()
+    {
+        $this->resetCheckboxes();
+    }
+
 }

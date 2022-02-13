@@ -9,7 +9,7 @@
 
             <div class="flex items-center">
                 @if ($paginate)
-                    <x-select :items="$paginationItems" wire:model="pagination"></x-select>
+                    <x-select :items="$paginationItems" wire:model="pagination" wire:change="paginationChanged"></x-select>
                 @endif
             </div>
             <div class="flex items-center">
