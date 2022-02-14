@@ -48,6 +48,8 @@
                     </div>
                 </th>
             @endif
+            @include("livewire-tables::partials._thead_fields")
+
 [header]
         </tr>
         </thead>

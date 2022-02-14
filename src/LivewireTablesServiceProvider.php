@@ -15,8 +15,8 @@ class LivewireTablesServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'timolake');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'timolake');
+        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'livewire-tables');
+         $this->loadViewsFrom(__DIR__.'/../resources/views', 'livewire-tables');
         // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
 
@@ -64,9 +64,9 @@ class LivewireTablesServiceProvider extends ServiceProvider
         ], 'livewire-tables');
 
         // Publishing the views.
-        /*$this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/timolake'),
-        ], 'livewire-tables.views');*/
+        $this->publishes([
+            __DIR__.'/../resources/views' => base_path('resources/views/vendor/livewire-tables'),
+        ], 'livewire-tables.views');
 
         // Publishing assets.
         /*$this->publishes([

@@ -46,6 +46,8 @@
                         <input type="checkbox" class="rounded" wire:model="checkAll" wire:change="toggleCheckAll">
                     </th>
                 @endif
+                @include("livewire-tables::partials._thead_fields")
+
 [header]
             </tr>
         </thead>

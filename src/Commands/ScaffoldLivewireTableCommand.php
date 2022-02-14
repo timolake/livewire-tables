@@ -48,17 +48,19 @@ class ScaffoldLivewireTableCommand extends FileManipulationCommand
 
     protected function headerRows(array $fields, array $css)
     {
-        $cells = [];
-        foreach ($fields as $key => $field) {
-            $cell = "\t\t\t<th".$this->getHeaderClass($field, $css).$this->getSortableAction($key,
-                    $field).'>'.$field['title'].'</th>';
-            if (end($fields) !== $field) {
-                $cell .= PHP_EOL;
-            }
-            array_push($cells, $cell);
-        }
 
-        return implode('', $cells);
+        return '';
+//        $cells = [];
+//        foreach ($fields as $key => $field) {
+//            $cell = "\t\t\t<th".$this->getHeaderClass($field, $css).$this->getSortableAction($key,
+//                    $field).'>'.$field['title'].'</th>';
+//            if (end($fields) !== $field) {
+//                $cell .= PHP_EOL;
+//            }
+//            array_push($cells, $cell);
+//        }
+//
+//        return implode('', $cells);
     }
 
     protected function dataRows(array $fields, array $css)
