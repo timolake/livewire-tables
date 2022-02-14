@@ -207,7 +207,6 @@ abstract class LivewireModelTable extends Component
 
     public function buildPaginationItems()
     {
-
         $maxCount = $this->totalRows;
         $this->paginationItems = [];
         $options = config('livewire-tables.pagination_items', [10, 25, 50, 100]);
@@ -248,6 +247,9 @@ abstract class LivewireModelTable extends Component
     public function clearSearch()
     {
         $this->search = null;
+        if ($this->HasCheckboxes) {
+            $this->resetCheckboxes();
+        }
     }
 
     protected function sortIsRelatedField(): bool

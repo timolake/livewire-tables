@@ -1,4 +1,6 @@
 # Changelog
+## 1.8.1
+- reset chekboxes on clear search 
 ## 1.8.0
 - add sorting icons
 ## 1.7.0
