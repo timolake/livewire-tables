@@ -1,4 +1,6 @@
 # Changelog
+## 1.9.0
+- add sort & pagination to mount
 ## 1.8.1
 - reset chekboxes on clear search 
 ## 1.8.0

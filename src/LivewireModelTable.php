@@ -44,6 +44,12 @@ abstract class LivewireModelTable extends Component
     {
         $this->trashed = $request->trashed == 1 ?? false;
         $this->search = $request->search ?? null;
+        $this->sortField = $request->sortField ?? null;
+        $this->sortDir = $request->sortDir ?? null;
+        if(isset($request->paginationPage)){
+            $this->setPage($request->paginationPage);
+
+        }
     }
 
     public function setSort($column)
