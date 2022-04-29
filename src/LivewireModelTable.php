@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
@@ -161,11 +162,11 @@ abstract class LivewireModelTable extends Component
                         $query->orWherein($parentId, function ($query) use ($field, $subTable, $subId, $searchTerm) {
                             $query->select($subId)
                                 ->from($subTable)
-                                ->where($field, 'LIKE', "%{$searchTerm}%");
+                                ->where(DB::raw('lower('.$field.')'), 'LIKE', Str::lower("%{$searchTerm}%"));
                         });
                     },
                     function (Builder $query) use ($attribute, $searchTerm) {
-                        $query->orWhere($attribute, 'LIKE', "%{$searchTerm}%");
+                        $query->orWhere(DB::raw('lower('.$attribute.')'), 'LIKE', Str::lower("%{$searchTerm}%"));
                     }
                 );
             }
