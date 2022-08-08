@@ -47,9 +47,8 @@ abstract class LivewireModelTable extends Component
         $this->search = $request->search ?? null;
         $this->sortField = $request->sortField ?? null;
         $this->sortDir = $request->sortDir ?? null;
-        if(isset($request->paginationPage)){
+        if (isset($request->paginationPage)) {
             $this->setPage($request->paginationPage);
-
         }
     }
 
@@ -152,29 +151,91 @@ abstract class LivewireModelTable extends Component
     protected function whereLike(Builder &$query, $attributes, string $searchTerm)
     {
         $query->where(function (Builder $query) use ($attributes, $searchTerm) {
+
             foreach (array_wrap($attributes) as $attribute) {
                 $query->when(
                     str_contains($attribute, '.'),
                     function (Builder $query) use ($attribute, $searchTerm) {
-                        [$relationshipName, $field] = explode('.', $attribute);
-                        [$parentTable, $parentId, $subTable, $subId] = $this->getRelationshipKeys($this->getRelationship($relationshipName));
-
-                        $query->orWherein($parentId, function ($query) use ($field, $subTable, $subId, $searchTerm) {
-                            $query->select($subId)
-                                ->from($subTable)
-                                ->where(DB::raw('lower('.$field.')'), 'LIKE', Str::lower("%{$searchTerm}%"));
-                        });
+                        $this->searchInRelationship($query, $attribute, $searchTerm);
                     },
                     function (Builder $query) use ($attribute, $searchTerm) {
-                        $query->orWhere(DB::raw('lower('.$attribute.')'), 'LIKE', Str::lower("%{$searchTerm}%"));
+                        $query->orWhere(DB::raw('lower(' . $attribute . ')'), 'LIKE', Str::lower("%{$searchTerm}%"));
                     }
                 );
             }
         });
     }
 
-    public function getRelationship(string $name): Relation
+    public function searchInRelationship(Builder &$query, $attribute, string $searchTerm)
     {
+        [$relationshipName, $field] = $this->parseAtribute($attribute);
+
+        [$parentTable, $parentId, $subTable, $subId] = $this->getRelationshipKeys($this->getRelationship($relationshipName));
+        $query->orWherein($parentId, function ($query) use ($field, $subTable, $subId, $searchTerm, $relationshipName) {
+            if (str_contains($field, '.')) {
+                //----------------------------------------------------
+                // search in nested relationship
+                // ex: user->post->comments
+                //----------------------------------------------------
+                [$fieldRelationshipName, $fieldField] = $this->parseAtribute($field);
+                [$fieldParentTable, $fieldParentId, $fieldSubTable, $fieldSubId] = $this->getRelationshipKeys($this->getRelationship($fieldRelationshipName, $relationshipName));
+
+                $query
+                    ->select($subId)
+                    ->from($subTable)
+                    ->whereIn(
+                        DB::raw('lower(' . $fieldParentId . ')'),
+                        function ($query) use ($fieldParentId, $fieldSubTable, $fieldSubId, $fieldField, $searchTerm) {
+                            $query
+                                ->select($fieldSubId)
+                                ->from($fieldSubTable)
+                                ->where(DB::raw('lower(' . $fieldField . ')'), 'LIKE', Str::lower("%{$searchTerm}%"));
+                        }
+                    );
+            } else {
+                //----------------------------------------------------
+                // search in subtable
+                // ex: user->posts
+                //----------------------------------------------------
+                $query->select($subId)
+                    ->from($subTable)
+                    ->where(DB::raw('lower(' . $field . ')'), 'LIKE', Str::lower("%{$searchTerm}%"));
+            }
+        });
+    }
+
+    public function parseAtribute(string $attribute)
+    {
+        //----------------------------------------------------
+        // explode string
+        //----------------------------------------------------
+        $items = explode('.', $attribute);
+        $relationshipName = $items[0];
+
+        //----------------------------------------------------
+        // check for nested relationship
+        //----------------------------------------------------
+        if (count($items) > 1) {
+            Arr::forget($items, 0);
+            $items = array_values($items);
+        }
+
+        //----------------------------------------------------
+        // set field value with . notation
+        //----------------------------------------------------
+        $field = count($items) > 1
+            ? implode(".", $items)
+            : $items[0];
+
+        return [$relationshipName, $field];
+    }
+
+    public function getRelationship(string $name, ?string $parent = null): Relation
+    {
+        if (isset($parent)) {
+            $parentRelation = app($this->model())->$parent();
+            return $parentRelation->getRelated()->$name();
+        }
         return app($this->model())->$name();
     }
 
@@ -272,10 +333,10 @@ abstract class LivewireModelTable extends Component
     protected function generateQueryFields($model)
     {
         return (collect($this->fields))->transform(function ($selectField) use ($model) {
-            if (Str::contains($selectField['name'], '.')) {
-                $fieldParts = explode('.', $selectField['name']);
-                $selectField['name'] = $fieldParts[0] . '.' . $fieldParts[1];
-            }
+//            if (Str::contains($selectField['name'], '.')) {
+//                $fieldParts = explode('.', $selectField['name']);
+//                $selectField['name'] = $fieldParts[0] . '.' . $fieldParts[1];
+//            }
 
             return $selectField;
         });
