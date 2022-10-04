@@ -368,5 +368,10 @@ abstract class LivewireModelTable extends Component
     {
         $this->resetCheckboxes();
     }
+    
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
 
 }
