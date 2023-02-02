@@ -151,7 +151,6 @@ abstract class LivewireModelTable extends Component
     protected function whereLike(Builder &$query, $attributes, string $searchTerm)
     {
         $query->where(function (Builder $query) use ($attributes, $searchTerm) {
-
             foreach (array_wrap($attributes) as $attribute) {
                 $query->when(
                     str_contains($attribute, '.'),
@@ -159,7 +158,7 @@ abstract class LivewireModelTable extends Component
                         $this->searchInRelationship($query, $attribute, $searchTerm);
                     },
                     function (Builder $query) use ($attribute, $searchTerm) {
-                        $query->orWhere(DB::raw('lower(' . $attribute . ')'), 'LIKE', Str::lower("%{$searchTerm}%"));
+                        $query->orWhere(DB::raw('lower('.$attribute.')'), 'LIKE', Str::lower("%{$searchTerm}%"));
                     }
                 );
             }
@@ -184,12 +183,12 @@ abstract class LivewireModelTable extends Component
                     ->select($subId)
                     ->from($subTable)
                     ->whereIn(
-                        DB::raw('lower(' . $fieldParentId . ')'),
+                        DB::raw('lower('.$fieldParentId.')'),
                         function ($query) use ($fieldParentId, $fieldSubTable, $fieldSubId, $fieldField, $searchTerm) {
                             $query
                                 ->select($fieldSubId)
                                 ->from($fieldSubTable)
-                                ->where(DB::raw('lower(' . $fieldField . ')'), 'LIKE', Str::lower("%{$searchTerm}%"));
+                                ->where(DB::raw('lower('.$fieldField.')'), 'LIKE', Str::lower("%{$searchTerm}%"));
                         }
                     );
             } else {
@@ -199,7 +198,7 @@ abstract class LivewireModelTable extends Component
                 //----------------------------------------------------
                 $query->select($subId)
                     ->from($subTable)
-                    ->where(DB::raw('lower(' . $field . ')'), 'LIKE', Str::lower("%{$searchTerm}%"));
+                    ->where(DB::raw('lower('.$field.')'), 'LIKE', Str::lower("%{$searchTerm}%"));
             }
         });
     }
@@ -247,6 +246,13 @@ abstract class LivewireModelTable extends Component
         $subId = null;
 
         $fullForeignKey = $relationship->getQualifiedForeignKeyName();
+
+        if ($relationship instanceof HasOne) {
+            [$parentTable, $parentId] = explode(".", $fullForeignKey);
+
+            $fullOwnerKey = $relationship->getQualifiedForeignKeyName();
+            [$subTable, $subId] = explode(".", $fullOwnerKey);
+        }
 
         if ($relationship instanceof BelongsTo) {
             [$parentTable, $parentId] = explode(".", $fullForeignKey);
@@ -368,7 +374,7 @@ abstract class LivewireModelTable extends Component
     {
         $this->resetCheckboxes();
     }
-    
+
     public function updatingSearch()
     {
         $this->resetPage();

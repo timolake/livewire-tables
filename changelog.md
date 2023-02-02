@@ -1,5 +1,7 @@
 # Changelog
-## 1.9.0
+## 1.13.0
+- add support for hasOne relationship
+- ## 1.9.0
 - add sort & pagination to mount
 ## 1.8.1
 - reset chekboxes on clear search 
