@@ -1,4 +1,6 @@
 # Changelog
+## 1.14.0
+- add support for laravel 10
 ## 1.13.0
 - add support for hasOne relationship
 - ## 1.9.0
