@@ -1,4 +1,6 @@
 # Changelog
+## 1.15.0 - 2023-10-06
+- add session id
 ## 1.14.0
 - add support for laravel 10
 ## 1.13.0

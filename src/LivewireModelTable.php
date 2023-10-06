@@ -10,12 +10,13 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Livewire\Component;
 
 abstract class LivewireModelTable extends Component
 {
-
+    public $sessionId = null;
     public $fields = [];
     public $css;
 
@@ -44,6 +45,10 @@ abstract class LivewireModelTable extends Component
 
     public function mount(Request $request)
     {
+        $this->sessionId = $request->has("sessionId")
+            ? (string) $request->sessionId
+            : "s1";
+
         $this->trashed = $request->trashed == 1 ?? false;
         $this->search = $request->search ?? null;
         $this->sortField = $request->sortField ?? null;
@@ -378,6 +383,31 @@ abstract class LivewireModelTable extends Component
     public function updatingSearch()
     {
         $this->resetPage();
+    }
+
+    //----------------------------------------------------
+    // php session with session id
+    //----------------------------------------------------
+
+    public function getTableSession($key)
+    {
+        return Session::get($this->sessionId.".$key");
+    }
+
+    public function PutTableSession($key, $value)
+    {
+
+        Session::put($this->sessionId.".$key", $value);
+    }
+
+    public function HasTableSession($key)
+    {
+        return Session::has($this->sessionId.".$key");
+    }
+
+    public function forgetTableSession($key)
+    {
+        Session::forget($this->sessionId.".$key");
     }
 
 }
