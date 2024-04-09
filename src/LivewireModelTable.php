@@ -32,6 +32,7 @@ abstract class LivewireModelTable extends Component
     public $hasSearch = true;
     public $search = null;
     public $previousSearch = null;
+    public $search_exploded_string = true;
 
     public $hasTrashed = false;
     public $trashed;
@@ -147,9 +148,15 @@ abstract class LivewireModelTable extends Component
     {
         $searchFields = $queryFields->where('searchable', true)->pluck('name')->toArray();
 
-        foreach (explode(" ", $this->search) as $key => $searchString) {
-            $this->whereLike($query, $searchFields, $searchString);
+        if($this->search_exploded_string){
+            foreach (explode(" ", $this->search) as $key => $searchString) {
+                $this->whereLike($query, $searchFields, $searchString);
+            }
+        }else{
+            $this->whereLike($query, $searchFields, $this->search);
         }
+
+
 
         return $query;
     }
