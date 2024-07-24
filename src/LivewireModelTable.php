@@ -41,11 +41,20 @@ abstract class LivewireModelTable extends Component
     public $HasCheckboxes = false;
     public $checkedItems = [];
 
+    public string $idField = 'id';
+
+
 
     protected $listeners = ['sortColumn' => 'setSort'];
 
     public function mount(Request $request)
     {
+
+        $this->modelClass = $this->model();
+        $tempModel = (new ($this->modelClass));
+        $this->idField = $tempModel->getKeyName();
+
+
         $this->sessionId = $request->has("sessionId")
             ? (string) $request->sessionId
             : "s1";
@@ -362,7 +371,7 @@ abstract class LivewireModelTable extends Component
 
     public function toggleCheckAll()
     {
-        $allIds = $this->query()->pluck("id")->toArray();
+        $allIds = $this->query()->pluck($this->idField)->toArray();
 
         if (empty($this->checkedItems)) {
             $this->checkedItems = $allIds;

@@ -1,4 +1,10 @@
 # Changelog
+## 1.18.0 - 2024-07-24
+- checkAll: get IdField from model
+## 1.17.0 - 2024-04-11
+- query: add select with queryfields
+## 1.16.0 - 2024-04-09
+- search: add variable for exploded search
 ## 1.15.0 - 2023-10-06
 - add session id
 ## 1.14.0
