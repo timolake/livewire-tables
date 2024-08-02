@@ -4,8 +4,8 @@ namespace timolake\LivewireTables\Commands;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Livewire\Commands\ComponentParser;
-use Livewire\Commands\FileManipulationCommand;
+use Livewire\Features\SupportConsoleCommands\Commands\ComponentParser;
+use Livewire\Features\SupportConsoleCommands\Commands\FileManipulationCommand;
 
 class MakeLivewireTableCommand extends FileManipulationCommand
 {

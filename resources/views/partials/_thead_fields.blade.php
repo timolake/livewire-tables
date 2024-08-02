@@ -1,6 +1,6 @@
 @foreach($fields as $key => $field)
     @if(!isset($field['visible_in_header']) or $field['visible_in_header'] == true)
-        <th class="table__cell table__cell--head {{$field["height_class"] ?? ''}} md:h-auto" wire:click="$emit('sortColumn',{{$key}})">
+        <th class="table__cell table__cell--head {{$field["height_class"] ?? ''}} md:h-auto" wire:click="$dispatch('sortColumn',{'column':{{$key}}})">
             <div class="flex items-center space-x-1">
                 <div style="cursor: pointer">
                     @lang($field["title"])

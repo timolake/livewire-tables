@@ -398,7 +398,7 @@ abstract class LivewireModelTable extends Component
 
     public function updatingSearch()
     {
-        $this->resetPage();
+        $this->dispatch('$reset');
     }
 
     //----------------------------------------------------

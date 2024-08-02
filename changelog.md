@@ -1,4 +1,8 @@
 # Changelog
+
+## 2.0.0 - 2024-07-24
+- upgrade to livewire 3
+- upgrade to laravel 11
 ## 1.18.0 - 2024-07-24
 - checkAll: get IdField from model
 ## 1.17.0 - 2024-04-11
