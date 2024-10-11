@@ -16,30 +16,30 @@ use Livewire\Component;
 
 abstract class LivewireModelTable extends Component
 {
-    public $sessionId = null;
-    public $fields = [];
-    public $css;
+    public ?string $sessionId = null;
+    public array $fields = [];
+    public ?string $css;
 
-    public $sortField = null;
-    public $sortDir = null;
+    public ?string $sortField = null;
+    public ?string $sortDir = null;
 
-    public $paginate = true;
-    public $pagination = 10;
-    public $totalRows = null;
-    public $paginationItems = [];
-    public $selectAllRows = false;
+    public bool $paginate = true;
+    public int $pagination = 10;
+    public ?int $totalRows = null;
+    public array $paginationItems = [];
+    public bool $selectAllRows = false;
 
-    public $hasSearch = true;
-    public $search = null;
-    public $previousSearch = null;
-    public $search_exploded_string = true;
+    public bool $hasSearch = true;
+    public ?string $search = null;
+    public ?string $previousSearch = null;
+    public bool $search_exploded_string = true;
 
-    public $hasTrashed = false;
-    public $trashed;
+    public bool $hasTrashed = false;
+    public bool $trashed = false;
 
-    public $checkAll = false;
-    public $HasCheckboxes = false;
-    public $checkedItems = [];
+    public bool $checkAll = false;
+    public bool$HasCheckboxes = false;
+    public array $checkedItems = [];
 
     public string $idField = 'id';
 
