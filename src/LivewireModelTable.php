@@ -267,26 +267,20 @@ abstract class LivewireModelTable extends Component
         $subTable = null;
         $subId = null;
 
-        $fullForeignKey = $relationship->getQualifiedForeignKeyName();
 
         if ($relationship instanceof HasOne) {
-            [$parentTable, $parentId] = explode(".", $fullForeignKey);
-
-            $fullOwnerKey = $relationship->getQualifiedForeignKeyName();
-            [$subTable, $subId] = explode(".", $fullOwnerKey);
+            [$parentTable, $parentId] = explode(".", $relationship->getQualifiedParentKeyName());
+            [$subTable, $subId] = explode(".",  $relationship->getQualifiedForeignKeyName());
         }
 
         if ($relationship instanceof BelongsTo) {
-            [$parentTable, $parentId] = explode(".", $fullForeignKey);
-
-            $fullOwnerKey = $relationship->getQualifiedOwnerKeyName();
-            [$subTable, $subId] = explode(".", $fullOwnerKey);
+            [$parentTable, $parentId] = explode(".", $relationship->getQualifiedParentKeyName());
+            [$subTable, $subId] = explode(".",  $relationship->getQualifiedOwnerKeyName());
         }
 
         if ($relationship instanceof HasMany) {
-            [$subTable, $subId] = explode(".", $fullForeignKey);
             [$parentTable, $parentId] = explode(".", $relationship->getQualifiedParentKeyName());
-
+            [$subTable, $subId] = explode(".",  $relationship->getQualifiedForeignKeyName());
         }
         return [$parentTable, $parentId, $subTable, $subId];
     }
