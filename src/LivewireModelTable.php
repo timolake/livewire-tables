@@ -148,7 +148,8 @@ abstract class LivewireModelTable extends Component
         return $query->orderBy(
             $relationship->getModel()::select("$field")
                 ->whereColumn("$subTable.$subId", "$parentTable.$parentId")
-                ->orderBy($field),
+                ->orderBy($field)
+                ->limit(1),
             $this->sortDir
         );
     }
