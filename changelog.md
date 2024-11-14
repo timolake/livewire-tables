@@ -1,5 +1,6 @@
 # Changelog
-
+## 2.3 - 2024-07-24
+- add search in belongstomany
 ## 2.0.0 - 2024-07-24
 - upgrade to livewire 3
 - upgrade to laravel 11
