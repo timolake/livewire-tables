@@ -4,6 +4,7 @@ namespace timolake\LivewireTables;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -192,38 +193,49 @@ abstract class LivewireModelTable extends Component
     {
         [$relationshipName, $field] = $this->parseAtribute($attribute);
 
-        [$parentTable, $parentId, $subTable, $subId] = $this->getRelationshipKeys($this->getRelationship($relationshipName));
-        $query->orWherein($parentId, function ($query) use ($field, $subTable, $subId, $searchTerm, $relationshipName) {
-            if (str_contains($field, '.')) {
-                //----------------------------------------------------
-                // search in nested relationship
-                // ex: user->post->comments
-                //----------------------------------------------------
-                [$fieldRelationshipName, $fieldField] = $this->parseAtribute($field);
-                [$fieldParentTable, $fieldParentId, $fieldSubTable, $fieldSubId] = $this->getRelationshipKeys($this->getRelationship($fieldRelationshipName, $relationshipName));
+        $relationship = $this->getRelationship($relationshipName);
+        [$parentTable, $parentId, $subTable, $subId] = $this->getRelationshipKeys($relationship);
 
-                $query
-                    ->select($subId)
-                    ->from($subTable)
-                    ->whereIn(
-                        DB::raw('lower('.$fieldParentId.')'),
-                        function ($query) use ($fieldParentId, $fieldSubTable, $fieldSubId, $fieldField, $searchTerm) {
-                            $query
-                                ->select($fieldSubId)
-                                ->from($fieldSubTable)
-                                ->where(DB::raw('lower('.$fieldField.')'), 'LIKE', Str::lower("%{$searchTerm}%"));
-                        }
-                    );
-            } else {
-                //----------------------------------------------------
-                // search in subtable
-                // ex: user->posts
-                //----------------------------------------------------
-                $query->select($subId)
-                    ->from($subTable)
-                    ->where(DB::raw('lower('.$field.')'), 'LIKE', Str::lower("%{$searchTerm}%"));
-            }
-        });
+        if($relationship instanceof BelongsToMany) {
+            $query->orWhereHas($relationshipName, function (Builder $query) use ($field,$parentTable, $parentId, $subTable, $subId, $searchTerm) {
+                $query->where($field, "like","%{$searchTerm}%");
+            });
+        }else{
+            $query->orWherein($parentId, function ($query) use ($field, $subTable, $subId, $searchTerm, $relationship,$relationshipName) {
+                if (str_contains($field, '.')) {
+                    //----------------------------------------------------
+                    // search in nested relationship
+                    // ex: user->post->comments
+                    //----------------------------------------------------
+                    [$fieldRelationshipName, $fieldField] = $this->parseAtribute($field);
+                    [$fieldParentTable, $fieldParentId, $fieldSubTable, $fieldSubId] = $this->getRelationshipKeys($this->getRelationship($fieldRelationshipName, $relationshipName));
+
+                    $query
+                        ->select($subId)
+                        ->from($subTable)
+                        ->whereIn(
+                            DB::raw('lower('.$fieldParentId.')'),
+                            function ($query) use ($fieldParentId, $fieldSubTable, $fieldSubId, $fieldField, $searchTerm) {
+                                $query
+                                    ->select($fieldSubId)
+                                    ->from($fieldSubTable)
+                                    ->where(DB::raw('lower('.$fieldField.')'), 'LIKE', Str::lower("%{$searchTerm}%"));
+                            }
+                        );
+                } else {
+
+                    //----------------------------------------------------
+                    // search in subtable
+                    // ex: user->posts
+                    //----------------------------------------------------
+                    $query->select($subId)
+                        ->from($subTable)
+                        ->where(DB::raw('lower('.$field.')'), 'LIKE', Str::lower("%{$searchTerm}%"));
+
+                }
+
+            });
+        }
     }
 
     public function parseAtribute(string $attribute)
@@ -283,6 +295,12 @@ abstract class LivewireModelTable extends Component
             [$parentTable, $parentId] = explode(".", $relationship->getQualifiedParentKeyName());
             [$subTable, $subId] = explode(".",  $relationship->getQualifiedForeignKeyName());
         }
+
+        if ($relationship instanceof BelongsToMany) {
+            [$parentTable, $parentId] = explode(".", $relationship->getQualifiedParentKeyName());
+            [$subTable, $subId] = explode(".",  $relationship->getQualifiedRelatedKeyName());
+        }
+
         return [$parentTable, $parentId, $subTable, $subId];
     }
 
