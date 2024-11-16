@@ -14,9 +14,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 abstract class LivewireModelTable extends Component
 {
+    use WithPagination
     public ?string $sessionId = null;
     public array $fields = [];
     public ?string $css;
