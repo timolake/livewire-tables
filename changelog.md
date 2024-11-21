@@ -1,6 +1,6 @@
 # Changelog
-## 2.3.1 - 2024-11-16
-- add search in belongstomany
+## 2.3.2 - 2024-11-21
+- add withPagination
 ## 2.3 - 2024-11-14
 - add search in belongstomany
 ## 2.0.0 - 2024-08-02

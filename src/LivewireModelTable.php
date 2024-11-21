@@ -18,7 +18,7 @@ use Livewire\WithPagination;
 
 abstract class LivewireModelTable extends Component
 {
-    use WithPagination
+    use WithPagination;
     public ?string $sessionId = null;
     public array $fields = [];
     public ?string $css;
