@@ -359,7 +359,7 @@ abstract class LivewireModelTable extends Component
     public function clearSearch()
     {
         $this->search = null;
-        $this->forgetTableSession("sortField");
+        $this->forgetTableSession("search");
 
         if ($this->HasCheckboxes) {
             $this->resetCheckboxes();
