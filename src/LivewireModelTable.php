@@ -25,6 +25,8 @@ abstract class LivewireModelTable extends Component
 
     public ?string $sortField = null;
     public ?string $sortDir = null;
+    public bool $saveSortInSession = true;
+
 
     public bool $paginate = true;
     public int $pagination = 10;
@@ -57,18 +59,13 @@ abstract class LivewireModelTable extends Component
         $tempModel = (new ($this->modelClass));
         $this->idField = $tempModel->getKeyName();
 
-
+        $className = str_slug(get_class($this));
         $this->sessionId = $request->has("sessionId")
-            ? (string) $request->sessionId
-            : "s1";
+            ? $className.$request->sessionId
+            :$className;
 
-        $this->trashed = $request->trashed == 1 ?? false;
-        $this->search = $request->search ?? null;
-        $this->sortField = $request->sortField ?? null;
-        $this->sortDir = $request->sortDir ?? null;
-        if (isset($request->paginationPage)) {
-            $this->setPage($request->paginationPage);
-        }
+        $this->initAttributesFromSession();
+
     }
 
     public function setSort($column)
@@ -85,6 +82,11 @@ abstract class LivewireModelTable extends Component
                 $this->sortDir = 'asc';
             } else {
                 $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
+            }
+
+            if($this->saveSortInSession){
+                $this->PutTableSession("sortField",$this->sortField);
+                $this->PutTableSession("sortDir",$this->sortDir);
             }
         }
     }
@@ -406,20 +408,100 @@ abstract class LivewireModelTable extends Component
         $this->checkedItems = [];
     }
 
-    public function paginationChanged()
-    {
-        $this->resetCheckboxes();
-    }
-
     public function updatingSearch()
     {
-        $this->dispatch('$reset');
+        $this->resetPage();
+    }
+
+    //----------------------------------------------------
+    // search, sort, pagination & trashed in session
+    //----------------------------------------------------
+    public function updatedSearch()
+    {
+        $this->PutTableSession("search",$this->search);
+
+    }
+    public function updatedTrashed()
+    {
+        $this->PutTableSession("trashed",$this->trashed);
+
+    }
+    public function updatedSortField()
+    {
+        if($this->saveSortInSession) {
+            $this->PutTableSession("sortfield", $this->sortfield);
+        }
+    }
+    public function updatedSortDir()
+    {
+        if($this->saveSortInSession) {
+            $this->PutTableSession("sortDir", $this->sortDir);
+        }
+    }
+    public function updatedPagination()
+    {
+        $this->resetCheckboxes();
+        $this->PutTableSession("pagination",$this->pagination);
+    }
+    public function updatedPaginators ()
+    {
+        $this->PutTableSession("paginators",$this->paginators);
+    }
+
+    public function initAttributesFromSession()
+    {
+
+        if($this->hasTableSession("search")) {
+            $this->search = $this->getTableSession("search");
+        }
+
+        if($this->hasTableSession("sortField")){
+            $this->sortField = $this->getTableSession("sortField");
+        }
+
+        if($this->hasTableSession("sortDir")) {
+            $this->sortDir = $this->getTableSession("sortDir");
+        }
+
+        if($this->hasTableSession("trashed")){
+            $this->trashed = $this->getTableSession("trashed");
+        }
+
+        if($this->hasTableSession("pagination")){
+            $this->pagination = $this->getTableSession("pagination");
+        }
+
+        if ($this->hasTableSession("paginators")){
+            $this->paginators = $this->getTableSession("paginators");
+        }
+    }
+    public function resetTableSession()
+    {
+        $this->clearSearch();
+
+        //----------------------------------------------------
+        // clear session
+        //----------------------------------------------------
+        $this->forgetTableSession("sortField");
+        $this->forgetTableSession("sortDir");
+        $this->forgetTableSession("trashed");
+        $this->forgetTableSession("pagination");
+        $this->forgetTableSession("paginators");
+
+        //----------------------------------------------------
+        // clear form values
+        //----------------------------------------------------
+        $this->sortField = null;
+        $this->sortDir = null;
+        $this->trashed = false;
+        $this->pagination = 10;
+        //paginators reset by clearSearch
+
     }
 
     //----------------------------------------------------
     // php session with session id
     //----------------------------------------------------
-
     public function getTableSession($key)
     {
         return Session::get($this->sessionId.".$key");
