@@ -1,5 +1,5 @@
 # Changelog
-## 2.4.0 - 2024-11-29
+## 2.4.1 - 2024-11-29
 - save attributes (search, sort, pagination, trashed) in session
 - remove fill atributes form request
 ## 2.3.2 - 2024-11-21
