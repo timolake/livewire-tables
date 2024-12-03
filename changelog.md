@@ -1,3 +1,9 @@
+# upgrade to v2
+- rename clearSearch to resetTableSession in blade files
+- livewire 3 [upgrade](https://livewire.laravel.com/docs/upgrading) 
+  - rename emit to dispatch & name all parameters
+  - remove alpine loading reference (now part of livewire)
+  - config\livewire.php: set legacy_model_binding to true
 # Changelog
 ## 2.4.1 - 2024-11-29
 - save attributes (search, sort, pagination, trashed) in session
