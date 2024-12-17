@@ -12,10 +12,10 @@
     "homepage": "https://github.com/timolake/livewire-tables",
     "keywords": ["Laravel", "Livewire", "livewire-tables"],
     "require": {
-        "php": "^8.1",
-        "illuminate/support": "~10|~11",
+        "php": "^8.2",
+        "illuminate/support": "^11.0",
         "laravel/helpers": "^1.4",
-        "laravel/laravel": "^11.0",
+        "laravel/framework": "^11.0",
         "livewire/livewire": "^3.4"
 
     },
