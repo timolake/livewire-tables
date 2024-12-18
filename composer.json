@@ -16,11 +16,13 @@
         "illuminate/support": "^11.0",
         "laravel/helpers": "^1.4",
         "laravel/framework": "^11.0",
-        "livewire/livewire": "^3.4"
+        "livewire/livewire": "^3.4",
+        "spatie/ray": "^1.41"
 
     },
     "require-dev": {
-
+        "pestphp/pest": "^3.7",
+        "orchestra/testbench": "^9.8"
     },
     "autoload": {
         "psr-4": {
@@ -29,7 +31,9 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "timolake\\LivewireTables\\Tests\\": "tests"
+            "timolake\\LivewireTables\\Tests\\": "tests",
+            "timolake\\LivewireTables\\Database\\": "database",
+            "timolake\\LivewireTables\\Factories\\": "database\\factories"
         }
     },
     "extra": {
@@ -37,6 +41,11 @@
             "providers": [
                 "timolake\\LivewireTables\\LivewireTablesServiceProvider"
             ]
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
         }
     }
 }
