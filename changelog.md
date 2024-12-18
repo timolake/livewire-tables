@@ -5,6 +5,9 @@
   - remove alpine loading reference (now part of livewire)
   - config\livewire.php: set legacy_model_binding to true
 # Changelog
+## 3.0 - 2024-12-18
+- bugifx belongsTo
+- add tests for search
 ## 2.4.1 - 2024-11-29
 - save attributes (search, sort, pagination, trashed) in session
 - remove fill atributes form request
