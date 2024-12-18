@@ -3,18 +3,22 @@
 namespace timolake\LivewireTables;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithPagination;
+use timolake\LivewireTables\Models\Color;
+use timolake\LivewireTables\Models\User;
 
 abstract class LivewireModelTable extends Component
 {
@@ -47,6 +51,8 @@ abstract class LivewireModelTable extends Component
     public array $checkedItems = [];
 
     public string $idField = 'id';
+
+    public array|Collection|LengthAwarePaginator $rowData;
 
 
 
@@ -91,9 +97,9 @@ abstract class LivewireModelTable extends Component
         }
     }
 
-    protected function query()
+    public function query()
     {
-        return $this->paginate($this->buildQuery());
+       $this->rowData =  $this->paginate($this->buildQuery());
     }
 
     protected function buildQuery()
@@ -107,8 +113,8 @@ abstract class LivewireModelTable extends Component
         } else {
             $query = $this->sort($query);
         }
-
         if ($this->hasSearch && $this->search && $this->search !== '') {
+
             $query = $this->search($query, $queryFields);
 
             if ($this->search != $this->previousSearch) {
@@ -291,7 +297,7 @@ abstract class LivewireModelTable extends Component
         }
 
         if ($relationship instanceof BelongsTo) {
-            [$parentTable, $parentId] = explode(".", $relationship->getQualifiedParentKeyName());
+            [$parentTable, $parentId] = explode(".", $relationship->getQualifiedForeignKeyName());
             [$subTable, $subId] = explode(".",  $relationship->getQualifiedOwnerKeyName());
         }
 
