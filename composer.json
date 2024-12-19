@@ -32,8 +32,8 @@
     "autoload-dev": {
         "psr-4": {
             "timolake\\LivewireTables\\Tests\\": "tests",
-            "timolake\\LivewireTables\\Database\\": "database",
-            "timolake\\LivewireTables\\Factories\\": "database\\factories"
+            "timolake\\LivewireTables\\Database\\": "tests\\database",
+            "timolake\\LivewireTables\\Factories\\": "tests\\database\\factories"
         }
     },
     "extra": {

@@ -1,6 +1,6 @@
 <?php
 
-namespace timolake\LivewireTables\Models;
+namespace timolake\LivewireTables\Tests\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

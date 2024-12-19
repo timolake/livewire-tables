@@ -1,10 +1,10 @@
 <?php
 
-namespace timolake\LivewireTables\Tests\tables;
+namespace timolake\LivewireTables\Tests\Tables;
 
 use Illuminate\Database\Eloquent\Builder;
 use timolake\LivewireTables\LivewireModelTable;
-use timolake\LivewireTables\Models\Post;
+use timolake\LivewireTables\Tests\Models\Post;
 
 class PostTable extends LivewireModelTable
 {
@@ -64,12 +64,12 @@ class PostTable extends LivewireModelTable
 
     public function render()
     {
-        return view('tables.post-table',["rowData" => $this->query()]);
+        return view('post-table',["rowData" => $this->query()]);
     }
 
     protected function updateQuery(Builder &$query)
     {
-        $query->with(['user','comments','tags']);
+        $query->with(['user.color','comments','tags']);
     }
 
 

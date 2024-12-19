@@ -3,10 +3,8 @@
 namespace timolake\LivewireTables\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use timolake\LivewireTables\Models\Comment;
-use timolake\LivewireTables\Models\Color;
-use timolake\LivewireTables\Models\Post;
-use timolake\LivewireTables\Models\User;
+use timolake\LivewireTables\Tests\Models\Color;
+use timolake\LivewireTables\Tests\Models\User;
 
 class UserFactory extends Factory
 {

@@ -24,7 +24,7 @@ abstract class TestCase extends orchestra
         Factory::guessModelNamesUsing(
             function (Factory $factory) {
                 $modelName = Str::replaceLast('Factory', '', class_basename(get_class($factory)));
-                return 'timolake\\LivewireTables\\Models\\'.$modelName;
+                return 'timolake\\LivewireTables\\Tests\\Models\\'.$modelName;
             }
         );
     }
@@ -42,22 +42,23 @@ abstract class TestCase extends orchestra
 
         Schema::dropAllTables();
 
-        $migration = include __DIR__.'/../database/migrations/20241218_094800_create_posts_table.php';
+        $migration = include __DIR__.'/database/migrations/20241218_094800_create_posts_table.php';
         $migration->up();
 
-        $migration = include __DIR__.'/../database/migrations/20241218_094800_create_users_table.php';
+        $migration = include __DIR__.'/database/migrations/20241218_094800_create_users_table.php';
         $migration->up();
 
-        $migration = include __DIR__.'/../database/migrations/20241218_094800_create_comments_table.php';
+        $migration = include __DIR__.'/database/migrations/20241218_094800_create_comments_table.php';
         $migration->up();
 
-        $migration = include __DIR__.'/../database/migrations/20241218_094800_create_tags_table.php';
+        $migration = include __DIR__.'/database/migrations/20241218_094800_create_tags_table.php';
         $migration->up();
         
-        $migration = include __DIR__.'/../database/migrations/20241218_094800_create_colors_table.php';
+        $migration = include __DIR__.'/database/migrations/20241218_094800_create_colors_table.php';
         $migration->up();
 
         View::addLocation(__DIR__ . "/../resources/views");
+        View::addLocation(__DIR__ . "/views");
 
 
     }

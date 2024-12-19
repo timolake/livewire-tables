@@ -3,10 +3,9 @@
 namespace timolake\LivewireTables\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use timolake\LivewireTables\Models\Comment;
-use timolake\LivewireTables\Models\Post;
-use timolake\LivewireTables\Models\Tag;
-use timolake\LivewireTables\Models\User;
+use timolake\LivewireTables\Tests\Models\Comment;
+use timolake\LivewireTables\Tests\Models\Post;
+use timolake\LivewireTables\Tests\Models\User;
 
 class PostFactory extends Factory
 {

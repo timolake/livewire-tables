@@ -2,9 +2,11 @@
 
 namespace timolake\LivewireTables;
 
+use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 use timolake\LivewireTables\Commands\MakeLivewireTableCommand;
 use timolake\LivewireTables\Commands\ScaffoldLivewireTableCommand;
-use Illuminate\Support\ServiceProvider;
+use timolake\LivewireTables\Tests\Tables\PostTable;
 
 class LivewireTablesServiceProvider extends ServiceProvider
 {
@@ -15,10 +17,7 @@ class LivewireTablesServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'livewire-tables');
          $this->loadViewsFrom(__DIR__.'/../resources/views', 'livewire-tables');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
@@ -29,6 +28,9 @@ class LivewireTablesServiceProvider extends ServiceProvider
                 ScaffoldLivewireTableCommand::class,
             ]);
         }
+
+        Livewire::component('post-table', PostTable::class);
+
     }
 
     /**
