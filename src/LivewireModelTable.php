@@ -30,9 +30,7 @@ abstract class LivewireModelTable extends Component
 
     public bool $paginate = true;
     public int $pagination = 10;
-    public ?int $totalRows = null;
     public array $paginationItems = [];
-    public bool $selectAllRows = false;
 
     public bool $hasSearch = true;
     public ?string $search = null;
@@ -49,6 +47,8 @@ abstract class LivewireModelTable extends Component
     public string $idField = 'id';
 
     protected $listeners = ['sortColumn' => 'setSort'];
+
+    public bool $addMaxCountToPaginate = false;
 
     public function mount(Request $request)
     {
@@ -123,8 +123,7 @@ abstract class LivewireModelTable extends Component
         $this->updateQuery($query);
 
         if ($this->paginate) {
-            $this->totalRows = $query->count();
-            $this->buildPaginationItems();
+            $this->buildPaginationItems($query);
         }
         return $query;
     }
@@ -168,8 +167,6 @@ abstract class LivewireModelTable extends Component
         }else{
             $this->whereLike($query, $searchFields, $this->search);
         }
-
-
 
         return $query;
     }
@@ -315,35 +312,25 @@ abstract class LivewireModelTable extends Component
         return $query->paginate($this->pagination ?? 15);
     }
 
-    public function buildPaginationItems()
+    public function buildPaginationItems($query)
     {
-        $maxCount = $this->totalRows;
-        $this->paginationItems = [];
-        $options = config('livewire-tables.pagination_items', [10, 25, 50, 100]);
-        $paginationNotInOptions = array_search($this->pagination, $options) === false;
+        $this->paginationItems= config('livewire-tables.pagination_items');
 
-        foreach ($options as $option) {
-            if ($option < $maxCount) {
-                $this->paginationItems[$option] = $option;
+        if($this->addMaxCountToPaginate){
 
-                if ($paginationNotInOptions
-                    and $this->pagination < $option
-                ) {
-                    $this->pagination = $option;
-                    $paginationNotInOptions = false;
+            $this-> paginationItems= [];
+            $maxCount = $query->count();
+
+            foreach (config('livewire-tables.pagination_items') as $option) {
+                if ($option < $maxCount) {
+                    $this->paginationItems[$option] = $option;
+                } else {
+                    break;
                 }
-            } else {
-                break;
             }
-        }
-        $this->paginationItems[$maxCount] = "$maxCount";
 
-        if ($this->selectAllRows
-            or $this->pagination > $maxCount
-            or array_search($this->pagination, $options) === false
-        ) {
-            $this->pagination = Arr::last($this->paginationItems);
-            $this->selectAllRows = false;
+            $this->paginationItems[$maxCount] = "$maxCount";
+
         }
     }
 
