@@ -181,7 +181,7 @@ abstract class LivewireModelTable extends Component
                         $this->searchInRelationship($query, $attribute, $searchTerm);
                     },
                     function (Builder $query) use ($attribute, $searchTerm) {
-                        $query->orWhere(DB::raw('lower('.$attribute.')'), 'LIKE', Str::lower("%{$searchTerm}%"));
+                        $query->orWhere($attribute, 'LIKE', "%{$searchTerm}%");
                     }
                 );
             }
@@ -212,13 +212,12 @@ abstract class LivewireModelTable extends Component
                     $query
                         ->select($subId)
                         ->from($subTable)
-                        ->whereIn(
-                            DB::raw('lower('.$fieldParentId.')'),
+                        ->whereIn($fieldParentId,
                             function ($query) use ($fieldParentId, $fieldSubTable, $fieldSubId, $fieldField, $searchTerm) {
                                 $query
                                     ->select($fieldSubId)
                                     ->from($fieldSubTable)
-                                    ->where(DB::raw('lower('.$fieldField.')'), 'LIKE', Str::lower("%{$searchTerm}%"));
+                                    ->where($fieldField, 'LIKE', "%{$searchTerm}%");
                             }
                         );
                 } else {
@@ -229,7 +228,7 @@ abstract class LivewireModelTable extends Component
                     //----------------------------------------------------
                     $query->select($subId)
                         ->from($subTable)
-                        ->where(DB::raw('lower('.$field.')'), 'LIKE', Str::lower("%{$searchTerm}%"));
+                        ->where($field, 'LIKE', "%{$searchTerm}%");
 
                 }
 

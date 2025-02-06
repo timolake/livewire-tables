@@ -5,6 +5,8 @@
   - remove alpine loading reference (now part of livewire)
   - config\livewire.php: set legacy_model_binding to true
 # Changelog
+## 2.5.2 - 2025-02-06
+- search: remove lower in query
 ## 2.5.1 - 2024-12-19
 - restore query() in render
 - refactor tests for search
