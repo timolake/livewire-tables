@@ -5,6 +5,8 @@
   - remove alpine loading reference (now part of livewire)
   - config\livewire.php: set legacy_model_binding to true
 # Changelog
+## 2.7.0 - 2025-05-08
+- search: add suppport for laravel 12
 ## 2.6.1 - 2025-02-06
 - search: remove lower in query
 ## 2.6.0 - 2025-01-06
