@@ -49,6 +49,10 @@ abstract class LivewireModelTable extends Component
     protected $listeners = ['sortColumn' => 'setSort'];
 
     public bool $addMaxCountToPaginate = false;
+    /**
+     * @var mixed|null
+     */
+    public bool $useSelectFields = false;
 
     public function mount(Request $request)
     {
@@ -96,9 +100,14 @@ abstract class LivewireModelTable extends Component
 
     protected function buildQuery()
     {
+
         $model = app($this->model());
         $query = $model->newQuery();
         $queryFields = $this->generateQueryFields($model);
+
+        if($this->useSelectFields){
+            $query = $this->setSelectFields($query, $queryFields);
+        }
 
         if ($this->sortIsRelatedField()) {
             $query = $this->sortByRelatedField($query, $model);
@@ -373,6 +382,9 @@ abstract class LivewireModelTable extends Component
             return $selectField;
         });
     }
+
+
+
 
     public function toggleCheckAll()
     {
