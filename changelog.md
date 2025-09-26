@@ -5,6 +5,10 @@
   - remove alpine loading reference (now part of livewire)
   - config\livewire.php: set legacy_model_binding to true
 # Changelog
+## 2.8.2 - 2025-09-26
+- session: bugfix sessionkey
+## 2.8.0 - 2025-05-08
+- query: add useSelectFields
 ## 2.7.0 - 2025-05-08
 - search: add suppport for laravel 12
 ## 2.6.1 - 2025-02-06

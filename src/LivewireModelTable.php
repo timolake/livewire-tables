@@ -504,23 +504,32 @@ abstract class LivewireModelTable extends Component
     //----------------------------------------------------
     public function getTableSession($key)
     {
-        return Session::get($this->sessionId.".$key");
+        $sessionKey = $this->getSessionKey($key);
+        return Session::get($sessionKey);
     }
 
     public function PutTableSession($key, $value)
     {
 
-        Session::put($this->sessionId.".$key", $value);
+        $sessionKey = $this->getSessionKey($key);
+        Session::put($sessionKey, $value);
     }
 
     public function HasTableSession($key)
     {
-        return Session::has($this->sessionId.".$key");
+        $sessionKey = $this->getSessionKey($key);
+        return Session::has($sessionKey);
     }
 
     public function forgetTableSession($key)
     {
-        Session::forget($this->sessionId.".$key");
+        $sessionKey = $this->getSessionKey($key);
+        Session::forget($sessionKey);
+    }
+
+    private function getSessionKey($key)
+    {
+        return str_slug($this->sessionId."-".$key);
     }
 
 }
