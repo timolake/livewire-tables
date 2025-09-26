@@ -46,6 +46,7 @@ abstract class LivewireModelTable extends Component
     public $checkedItems = [];
 
     public string $idField = 'id';
+    public bool $saveSortInSession = true;
 
 
 
@@ -70,6 +71,7 @@ abstract class LivewireModelTable extends Component
 
     public function setSort($column)
     {
+
         $field = $this->fields[$column];
 
         if (isset($field["sortable"]) and $field["sortable"]) {
@@ -80,8 +82,11 @@ abstract class LivewireModelTable extends Component
             if ($sortField != $this->sortField) {
                 $this->sortField = $sortField;
                 $this->sortDir = 'asc';
+                $this->PutTableSession("sortField", $this->sortField);
+                $this->PutTableSession("sortDir", $this->sortDir);
             } else {
                 $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
+                $this->PutTableSession("sortDir", $this->sortDir);
             }
         }
     }
@@ -348,7 +353,9 @@ abstract class LivewireModelTable extends Component
             $this->resetCheckboxes();
         }
 
-        $this->resetPage();
+        if($this->paginate){
+            $this->resetPage();
+        }
     }
 
     protected function sortIsRelatedField(): bool
@@ -424,7 +431,7 @@ abstract class LivewireModelTable extends Component
     public function updatedSortField()
     {
         if($this->saveSortInSession) {
-            $this->PutTableSession("sortfield", $this->sortfield);
+            $this->PutTableSession("sortField", $this->sortField);
         }
     }
     public function updatedSortDir()
@@ -521,7 +528,7 @@ abstract class LivewireModelTable extends Component
         Session::forget($sessionKey);
     }
 
-    private function getSessionKey($key)
+    protected function getSessionKey($key)
     {
         return str_slug($this->sessionId."-".$key);
     }
