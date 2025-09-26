@@ -13,9 +13,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 abstract class LivewireModelTable extends Component
 {
+
+    use WithPagination;
+
     public $sessionId = null;
     public $fields = [];
     public $css;
@@ -398,7 +402,10 @@ abstract class LivewireModelTable extends Component
 
     public function updatingSearch()
     {
-        $this->resetPage();
+        if($this->paginate){
+            $this->resetPage();
+        }
+
     }
 
     //----------------------------------------------------
