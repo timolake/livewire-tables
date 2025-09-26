@@ -529,9 +529,7 @@ abstract class LivewireModelTable extends Component
 
     private function getSessionKey($key)
     {
-        return $this->sessionId == null
-            ? $key
-            : $this->sessionId."-$key";
+        return str_slug($this->sessionId."-".$key);
     }
 
 }
