@@ -429,7 +429,7 @@ abstract class LivewireModelTable extends Component
     public function updatedSortField()
     {
         if($this->saveSortInSession) {
-            $this->PutTableSession("sortfield", $this->sortfield);
+            $this->PutTableSession("sortField", $this->sortField);
         }
     }
     public function updatedSortDir()
@@ -527,7 +527,7 @@ abstract class LivewireModelTable extends Component
         Session::forget($sessionKey);
     }
 
-    private function getSessionKey($key)
+    protected function getSessionKey($key)
     {
         return str_slug($this->sessionId."-".$key);
     }
