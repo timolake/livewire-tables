@@ -1,4 +1,6 @@
 # Changelog
+## 1.18.1 - 2025-09-26
+- session: bugfix sessionname
 ## 1.18.0 - 2024-07-24
 - checkAll: get IdField from model
 ## 1.17.0 - 2024-04-11
