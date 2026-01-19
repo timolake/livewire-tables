@@ -63,7 +63,7 @@ abstract class LivewireModelTable extends Component
 
         $className = str_slug(get_class($this));
         $this->sessionId = $request->has("sessionId")
-            ? $className.$request->sessionId
+            ? $request->sessionId
             :$className;
 
         $this->initAttributesFromSession();
