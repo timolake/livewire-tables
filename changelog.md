@@ -1,5 +1,5 @@
 # Changelog
-## 1.18.6- 2026-01-19
+## 1.18.7- 2026-01-19
 - session: bugfix default sessionname
 ## 1.18.5- 2025-09-26
 - session: bugfix sessionname
