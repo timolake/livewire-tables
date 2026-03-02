@@ -5,6 +5,8 @@
   - remove alpine loading reference (now part of livewire)
   - config\livewire.php: set legacy_model_binding to true
 # Changelog
+## 3.0.0 - 2026-03-02
+- livewire 4
 ## 2.8.6 - 2026-01-19
 - session: bugfix session id
 ## 2.8.5 - 2025-09-26
