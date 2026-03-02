@@ -12,7 +12,7 @@
     "homepage": "https://github.com/timolake/livewire-tables",
     "keywords": ["Laravel", "Livewire", "livewire-tables"],
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "illuminate/support": "~11.0|~12.0",
         "laravel/helpers": "^1.4",
         "laravel/framework": "~11.0|~12.0",
@@ -21,7 +21,7 @@
 
     },
     "require-dev": {
-        "pestphp/pest": "^3.7",
+        "pestphp/pest": "^4.0",
         "orchestra/testbench": "^10.0"
     },
     "autoload": {
