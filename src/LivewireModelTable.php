@@ -343,12 +343,7 @@ abstract class LivewireModelTable extends Component
     }
 
     abstract function model();
-
-    protected function with()
-    {
-        return [];
-    }
-
+    
     public function clearSearch()
     {
         $this->search = null;
