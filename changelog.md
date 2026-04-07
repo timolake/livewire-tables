@@ -5,6 +5,8 @@
   - remove alpine loading reference (now part of livewire)
   - config\livewire.php: set legacy_model_binding to true
 # Changelog
+## 3.1.0 - 2026-04-07
+- composer: add support for laravel 13
 ## 3.0.2 - 2026-03-02
 - cleanup: remove unused function
 - ## 3.0.2 - 2026-03-02
